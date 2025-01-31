@@ -1,0 +1,82 @@
+version: "3.8"
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5401:5432"
+    volumes:
+      - pgdata_memory_builder:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - memory_builder_network
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6381:6379"
+    networks:
+      - memory_builder_network
+
+  minio:
+    image: minio/minio
+    ports:
+      - "${MINIO_HOST_PORT}:9000"
+      - "${MINIO_HOST_CONSOLE_PORT}:9001"
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+    volumes:
+      - memory_builder_minio_data:/data
+    command: server /data --console-address ":9001"
+    networks:
+      - memory_builder_network
+
+  memory_builder:
+    build:
+      context: .
+      dockerfile: memory_builder/Dockerfile.dev
+    ports:
+      - "8181:8000"
+      - "5579:5579"
+    volumes:
+      - ./memory_builder:/app
+      - ./.env:/app/.env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      minio:
+        condition: service_started
+    networks:
+      - memory_builder_network
+
+  celery_worker:
+    build:
+      context: .
+      dockerfile: memory_builder/Dockerfile.dev
+    volumes:
+      - ./memory_builder:/app
+      - ./.env:/app/.env
+    networks:
+      - memory_builder_network
+    depends_on:
+      - memory_builder
+      - redis
+
+networks:
+  memory_builder_network:
+    driver: bridge
+
+volumes:
+  pgdata_memory_builder:
+  memory_builder_minio_data:

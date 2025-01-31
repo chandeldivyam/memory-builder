@@ -1,0 +1,22 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    postgresql-client \
+    inotify-tools \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY ./memory_builder/requirements.txt .
+RUN pip install -r requirements.txt
+RUN pip install debugpy
+
+COPY ./memory_builder/alembic.ini .
+COPY ./memory_builder/app/alembic ./app/alembic
+COPY ./memory_builder/entrypoint.sh .
+
+RUN chmod +x entrypoint.sh
+
+CMD ["./entrypoint.sh"]
