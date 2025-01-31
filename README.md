@@ -4,6 +4,7 @@
 
 * To run the client app and the database, run the following command:
 ```bash
+cp .env.example .env
 chmod +x memory_builder/entrypoint.sh 
 docker compose -f docker-compose.dev.yml up --build
 ```
