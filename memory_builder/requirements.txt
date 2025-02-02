@@ -17,3 +17,4 @@ python-json-logger
 aiohttp
 minio
 gunicorn
+azure-ai-inference

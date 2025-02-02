@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from app.worker.tasks import process_long_task
+from app.worker.tasks import process_ingestion_request
 from typing import Optional
 from app.schemas.knowledge import KnowledgeIngest, KnowledgeIngestResponse
 # logging
@@ -20,7 +20,7 @@ async def ingest_knowledge(content: KnowledgeIngest):
         task_id = str(uuid.uuid4())
         
         # Start celery task with both required parameters
-        task = process_long_task.delay(task_id, content.content)
+        task = process_ingestion_request.delay(task_id, content.content)
         
         # Update the task ID to use Celery's task ID for consistency
         return {"task_id": task.id, "status": "processing"}
@@ -33,7 +33,7 @@ async def get_task_status(task_id: str):
     """
     Get the status of a knowledge ingestion task
     """
-    task = process_long_task.AsyncResult(task_id)
+    task = process_ingestion_request.AsyncResult(task_id)
     
     # Map Celery states to our status format
     if task.state == 'PENDING':

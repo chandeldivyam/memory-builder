@@ -5,12 +5,12 @@ import logging
 logger = logging.getLogger(__name__)
 
 @celery_app.task(
-    name="process_long_task",
+    name="process_ingestion_request",
     bind=True,
     max_retries=3,
     default_retry_delay=60
 )
-def process_long_task(self, task_id: str, content: str):
+def process_ingestion_request(self, task_id: str, content: str):
     """
     Process knowledge ingestion task
     
@@ -25,7 +25,7 @@ def process_long_task(self, task_id: str, content: str):
         logger.info(f"Starting knowledge ingestion task {task_id}")
         logger.info(f"Content Length: {len(content)}")
 
-        # Simulate long processing
+        # Simulate ingestion requestessing
         time.sleep(10)
         
         # Here you would typically:
