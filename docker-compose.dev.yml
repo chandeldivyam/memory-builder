@@ -64,6 +64,7 @@ services:
     build:
       context: .
       dockerfile: memory_builder/Dockerfile.dev
+    command: celery -A app.core.celery_app.celery_app worker --loglevel=info
     volumes:
       - ./memory_builder:/app
       - ./.env:/app/.env

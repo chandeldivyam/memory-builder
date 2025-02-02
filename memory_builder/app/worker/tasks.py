@@ -4,13 +4,40 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-@celery_app.task(name="process_long_task")
-def process_long_task(task_id: str):
+@celery_app.task(
+    name="process_long_task",
+    bind=True,
+    max_retries=3,
+    default_retry_delay=60
+)
+def process_long_task(self, task_id: str, content: str):
     """
-    Example long-running task that simulates processing
+    Process knowledge ingestion task
+    
+    Args:
+        task_id (str): Unique identifier for the task
+        content (str): Content to be processed
+    
+    Returns:
+        dict: Task result with status information
     """
-    logger.info(f"Starting long task {task_id}")
-    # Simulate long processing
-    time.sleep(10)
-    logger.info(f"Completed long task {task_id}")
-    return {"task_id": task_id, "status": "completed"}
+    try:
+        logger.info(f"Starting knowledge ingestion task {task_id}")
+        logger.info(f"Content Length: {len(content)}")
+
+        # Simulate long processing
+        time.sleep(10)
+        
+        # Here you would typically:
+        # 1. Process the content (e.g., extract information, generate embeddings)
+        # 2. Store the processed content
+        # 3. Update any relevant indexes
+
+        logger.info(f"Completed knowledge ingestion task {task_id}")
+        return {
+            "task_id": task_id,
+            "status": "completed",
+            "processed_length": len(content)
+        }
+    except Exception as e:
+        logger.error(f"Error processing task {task_id}: {str(e)}")

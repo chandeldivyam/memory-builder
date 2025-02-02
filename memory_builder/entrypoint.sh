@@ -22,4 +22,4 @@ fi
 ) &
 
 # Start the application
-exec python -m debugpy --listen 0.0.0.0:5679 -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+exec python -m debugpy --listen 0.0.0.0:5579 -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload

@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from app.core.config import settings
 import logging
+from app.api.knowledge.router import router as knowledge_router
+from app.api.session.router import router as session_router
 
 # Initialize logging
 logging.basicConfig(level=logging.INFO)
@@ -22,3 +24,7 @@ async def shutdown_event():
 def read_root():
     logger.info("Root endpoint accessed")
     return {"message": "Welcome to the memory builder"}
+
+# Add this after your FastAPI app initialization
+app.include_router(knowledge_router, prefix="/api/v1")
+app.include_router(session_router, prefix="/api/v1")
