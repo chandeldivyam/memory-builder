@@ -4,10 +4,6 @@ class ChunkerConfig (ABC):
     def __init__(self, config : dict):
         self.type = config['type']
 
-    @abstractmethod
-    def create_chunker(self):
-        pass
-
 
 class BaseChunker(ABC):
     @abstractmethod

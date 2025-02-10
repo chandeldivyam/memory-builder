@@ -1,4 +1,4 @@
-from .base_chunker import BaseChunker, ChunkerConfig
+from .base import BaseChunker, ChunkerConfig
 from typing import List
 
 class RawChunkerConfig(ChunkerConfig):
@@ -12,4 +12,4 @@ class RawChunker(BaseChunker):
 
     def chunk_text(self, text: str) -> List[str]:
         max_len = self.config.max_len
-        return [text[i:i + max_len] for i in range(0, len(text), max_len)]
+        return [text[i:i + max_len] for i in range(0, len(text), max_len//2)]
