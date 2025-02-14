@@ -74,3 +74,15 @@ To completely remove the containers, networks, and **volumes** (persistent data)
 docker compose -f docker-compose.dev.yml down -v
 ```
 **Warning:** This command will delete your database data if it's stored in Docker volumes. Use with caution if you need to preserve your data.
+
+
+### Additional Notes to understand the code flow:
+
+* **Ingestion Request**
+  - This is served as an asynchronous request
+  - On any ingestion request, calls the router, which in turn calls the corresponding knowledge ingestion request asynchronously (see `worker/ingestion_tasks.py`)
+  - This will in turn call the manager to ingest text into corresponding memory layers (Reference `memory/manager.py`) 
+
+* **Query Request**
+  - This will be served synchronously
+  - On any query request, it will query the manager to retrieve the corresponding list of matching nodes, 

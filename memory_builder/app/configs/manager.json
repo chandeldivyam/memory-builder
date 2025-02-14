@@ -1,0 +1,20 @@
+{
+  "layers": [
+    {
+      "type": "basic",
+      "name": "Episodic Layer",
+      "retriever_config": {
+        "type": "normal_rag"
+      },
+      "chunker_config": {
+        "type": "raw",
+        "max_len": 25
+      },
+      "embedding_config": {
+        "type": "azure_openai",
+        "model_name": "text-embedding-3-large",
+        "key_auth": true
+      }
+    }
+  ]
+}

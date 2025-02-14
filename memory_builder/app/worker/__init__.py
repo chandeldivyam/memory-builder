@@ -1,1 +1,1 @@
-from app.worker.tasks import * 
+from app.worker.ingestion_tasks import process_ingestion_request

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from ..retrievers.retriever_factory import get_retriever
-from utils.chunker.chunker_factory import get_chunker
-from utils.vector_embedding_client.embedding_factory import get_embedding_client
+from app.utils.chunker.chunker_factory import get_chunker
+from app.utils.vector_embedding_client.embedding_factory import get_embedding_client
 
 class MemoryLayer(ABC):
     def __init__(self, name, config):
@@ -11,9 +11,9 @@ class MemoryLayer(ABC):
         self.embedding_client = get_embedding_client(config['embedding_config'])
 
     @abstractmethod
-    def ingest(self, data):
+    def ingest(self, db, data):
         pass
 
     @abstractmethod
-    def retrieve(self, query):
+    def retrieve(self, db, query):
         pass

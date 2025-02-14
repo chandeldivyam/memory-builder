@@ -16,6 +16,7 @@ class AzureOpenAIEmbeddingClient(VectorEmbedding):
     def __init__(self, config: AzureOpenAIEmbeddingConfig):
         self.config = config
         self.client = None
+        self.embedding_size = None
         if self.config.key_auth:
             try:
                 key =settings.AZURE_OPENAI_EMBEDDINGS_KEY
@@ -36,3 +37,10 @@ class AzureOpenAIEmbeddingClient(VectorEmbedding):
     def get_embedding(self, text: str):
         response = self.client.embeddings.create(input=[text], model=self.config.model_name).data[0].embedding
         return response
+    
+    def get_embedding_size(self):
+        if self.embedding_size:
+            return self.embedding_size
+        test_text = "test"
+        embedding = self.get_embedding(test_text)
+        return len(embedding)

@@ -11,3 +11,11 @@ class VectorEmbedding(ABC):
 
     def __call__(self, text):
         return self.get_embedding(text)
+    
+    @abstractmethod
+    def get_embedding(self, text):
+        pass
+
+    @abstractmethod
+    def get_embedding_size(self):
+        pass

@@ -1,6 +1,9 @@
 import time
 from app.core.celery_app import celery_app
+from sqlalchemy.orm import Session 
 import logging
+from app.memory.manager import get_memory_manager
+import traceback
 
 logger = logging.getLogger(__name__)
 
@@ -8,9 +11,9 @@ logger = logging.getLogger(__name__)
     name="process_ingestion_request",
     bind=True,
     max_retries=3,
-    default_retry_delay=60
+    default_retry_delay=5
 )
-def process_ingestion_request(self, task_id: str, content: str):
+def process_ingestion_request(self, db: Session, task_id: str, content: str):
     """
     Process knowledge ingestion task
     
@@ -23,15 +26,16 @@ def process_ingestion_request(self, task_id: str, content: str):
     """
     try:
         logger.info(f"Starting knowledge ingestion task {task_id}")
-        logger.info(f"Content Length: {len(content)}")
-
-        # Simulate ingestion requestessing
-        time.sleep(10)
-        
         # Here you would typically:
         # 1. Process the content (e.g., extract information, generate embeddings)
         # 2. Store the processed content
         # 3. Update any relevant indexes
+
+        manager = get_memory_manager()
+
+        logger.info(f"Ingesting content into memory manager")
+        logger.info(f"Content Length: {len(content)}")
+        manager.ingest(db = db, data = content)
 
         logger.info(f"Completed knowledge ingestion task {task_id}")
         return {
@@ -40,4 +44,10 @@ def process_ingestion_request(self, task_id: str, content: str):
             "processed_length": len(content)
         }
     except Exception as e:
+        traceback.print_exc()
         logger.error(f"Error processing task {task_id}: {str(e)}")
+        self.retry(exc=e)
+        return {
+            "task_id": task_id,
+            "status": "failed"
+        }

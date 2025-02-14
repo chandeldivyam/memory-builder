@@ -1,5 +1,7 @@
-from fastapi import APIRouter, HTTPException
-from app.worker.tasks import process_ingestion_request
+from fastapi import APIRouter, HTTPException, Depends
+from app.db.base import get_db
+from sqlalchemy.orm import Session
+from app.worker.ingestion_tasks import process_ingestion_request
 from typing import Optional
 from app.schemas.knowledge import KnowledgeIngest, KnowledgeIngestResponse
 # logging
@@ -11,7 +13,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/knowledge", tags=["knowledge"])
 
 @router.post("/ingest", response_model=KnowledgeIngestResponse)
-async def ingest_knowledge(content: KnowledgeIngest):
+async def ingest_knowledge(content: KnowledgeIngest, db: Session = Depends(get_db)):
     """
     Ingest knowledge content and process it asynchronously
     """
@@ -20,7 +22,7 @@ async def ingest_knowledge(content: KnowledgeIngest):
         task_id = str(uuid.uuid4())
         
         # Start celery task with both required parameters
-        task = process_ingestion_request.delay(task_id, content.content)
+        task = process_ingestion_request.delay(db, task_id, content.content)
         
         # Update the task ID to use Celery's task ID for consistency
         return {"task_id": task.id, "status": "processing"}

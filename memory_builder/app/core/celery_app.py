@@ -5,7 +5,7 @@ celery_app = Celery(
     "worker",
     broker=f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}/0",
     backend=f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}/0",
-    include=['app.worker.tasks']  # Add this line to include tasks
+    include=['app.worker.ingestion_tasks']  # Add this line to include tasks
 )
 
 # Configure Celery

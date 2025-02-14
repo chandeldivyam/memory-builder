@@ -5,11 +5,11 @@ class Retriever(ABC):
         self.name = name
 
     @abstractmethod
-    def retrieve(self, query_embedding, n_results)  -> list:
+    def retrieve(self, db, query_embedding, n_results)  -> list:
         pass
 
     @abstractmethod
-    def ingest(self, data_embeddings) -> bool:
+    def ingest(self, db, text, data_embeddings) -> bool:
         pass
 
     @abstractmethod
