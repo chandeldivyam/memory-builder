@@ -2,6 +2,7 @@ from typing import Generator
 from .memory_layers.layers_factory import get_memory_layer
 import os
 import json
+from app.schemas.query import QueryResponse
 
 
 class MemoryManager:
@@ -29,7 +30,8 @@ class MemoryManager:
         results = []
         for layer in self.layers:
             results.extend(layer.retrieve(db, query))
-        return results
+        print("results", results)
+        return QueryResponse(results=results)
 
     @classmethod
     def get_instance(cls, config = None):
