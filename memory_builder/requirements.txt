@@ -1,6 +1,7 @@
 fastapi
 uvicorn
 sqlalchemy
+pgvector
 alembic
 psycopg2-binary
 python-jose

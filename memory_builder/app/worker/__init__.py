@@ -1,1 +1,0 @@
-from app.worker.ingestion_tasks import process_ingestion_request

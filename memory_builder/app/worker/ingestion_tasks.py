@@ -1,8 +1,7 @@
 import time
 from app.core.celery_app import celery_app
-from sqlalchemy.orm import Session 
+from app.db.base import get_db
 import logging
-from app.memory.manager import get_memory_manager
 import traceback
 
 logger = logging.getLogger(__name__)
@@ -13,7 +12,7 @@ logger = logging.getLogger(__name__)
     max_retries=3,
     default_retry_delay=5
 )
-def process_ingestion_request(self, db: Session, task_id: str, content: str):
+def process_ingestion_request(self, task_id: str, content: str):
     """
     Process knowledge ingestion task
     
@@ -24,6 +23,8 @@ def process_ingestion_request(self, db: Session, task_id: str, content: str):
     Returns:
         dict: Task result with status information
     """
+    db = next(get_db())
+    from app.memory.manager import get_memory_manager
     try:
         logger.info(f"Starting knowledge ingestion task {task_id}")
         # Here you would typically:

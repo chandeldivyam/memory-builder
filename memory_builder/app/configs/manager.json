@@ -4,7 +4,8 @@
       "type": "basic",
       "name": "Episodic Layer",
       "retriever_config": {
-        "type": "normal_rag"
+        "type": "normal_rag",
+        "similarity_threshold": 0.3
       },
       "chunker_config": {
         "type": "raw",
