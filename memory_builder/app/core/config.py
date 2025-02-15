@@ -31,6 +31,11 @@ class Settings(BaseSettings):
     # Environment
     ENVIRONMENT: str = "development"
 
+    # OpenAI Azure
+    AZURE_OPENAI_EMBEDDINGS_KEY: str
+    AZURE_OPENAI_EMBEDDINGS_VERSION: str
+    AZURE_OPENAI_EMBEDDINGS_ENDPOINT_URL: str
+
     class Config:
         case_sensitive = True
         env_file = ".env"

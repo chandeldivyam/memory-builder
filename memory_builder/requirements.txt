@@ -1,6 +1,7 @@
 fastapi
 uvicorn
 sqlalchemy
+pgvector
 alembic
 psycopg2-binary
 python-jose
@@ -17,3 +18,4 @@ python-json-logger
 aiohttp
 minio
 gunicorn
+openai

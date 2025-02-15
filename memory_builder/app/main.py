@@ -3,6 +3,7 @@ from app.core.config import settings
 import logging
 from app.api.knowledge.router import router as knowledge_router
 from app.api.session.router import router as session_router
+from app.api.query.router import router as query_router
 
 # Initialize logging
 logging.basicConfig(level=logging.INFO)
@@ -28,3 +29,4 @@ def read_root():
 # Add this after your FastAPI app initialization
 app.include_router(knowledge_router, prefix="/api/v1")
 app.include_router(session_router, prefix="/api/v1")
+app.include_router(query_router, prefix="/api/v1")
